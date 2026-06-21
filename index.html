@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Konoba Gušte — Vodice</title>
+<meta name="description" content="Konoba Gušte — najstarija konoba u Vodicama i prvi steak house u Dalmaciji. Odresci na žaru na drveni ugljen, vrhunski pršut i sir, velika vinska karta. Stare kamene kuće starog grada." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥩</text></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#F5F4F1;
+    --bg-alt:#EBEAE2;
+    --text-dark:#2C2924;
+    --text-mid:#7C7570;
+    --stone:#9C938C;
+    --accent:#9B3B2E;
+    --font-display:'Cormorant Garamond', Georgia, serif;
+    --font-body:'DM Sans', system-ui, sans-serif;
+    --maxw:1440px;
+    --gut:clamp(20px, 5vw, 96px);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    background:var(--bg);
+    color:var(--text-dark);
+    font-family:var(--font-body);
+    font-weight:300;
+    font-size:17px;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  body.no-scroll{overflow:hidden}
+  img{display:block;max-width:100%;height:auto}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  .eyebrow{
+    font-family:var(--font-body);
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.18em;
+    font-weight:500;
+    color:var(--text-mid);
+    display:inline-block;
+  }
+  h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.08;letter-spacing:.02em}
+  h2{font-size:clamp(34px,5.5vw,64px)}
+  h3{font-size:clamp(24px,3vw,34px)}
+  .italic{font-style:italic;font-weight:300}
+
+  /* ---------- preloader ---------- */
+  .preloader{
+    position:fixed;inset:0;z-index:9000;
+    background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .preloader-logo{
+    font-family:var(--font-display);
+    font-size:clamp(40px,9vw,84px);
+    letter-spacing:.04em;
+    font-style:italic;
+    font-weight:300;
+    color:var(--text-dark);
+    opacity:0;
+  }
+  .preloader-logo .dot{color:var(--accent)}
+
+  /* ---------- custom cursor ---------- */
+  .cursor{
+    position:fixed;top:0;left:0;width:34px;height:34px;
+    border:1px solid var(--text-mid);border-radius:50%;
+    pointer-events:none;z-index:9999;
+    transform:translate(-50%,-50%);
+    transition:background-color .3s, border-color .3s;
+    mix-blend-mode:difference;
+    display:none;
+  }
+  .cursor.active{background:var(--bg);border-color:var(--bg)}
+  @media (hover:hover) and (pointer:fine){
+    .cursor{display:block}
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed;top:0;left:0;width:100%;z-index:800;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px var(--gut);
+    transition:transform .5s cubic-bezier(.6,.05,.1,1), background-color .4s, padding .4s;
+    mix-blend-mode:difference;
+  }
+  header.scrolled{
+    mix-blend-mode:normal;
+    background:rgba(245,244,241,.86);
+    backdrop-filter:blur(12px);
+    padding-top:16px;padding-bottom:16px;
+    border-bottom:1px solid rgba(156,147,140,.18);
+  }
+  header.hidden{transform:translateY(-110%)}
+  .brand{
+    font-family:var(--font-display);
+    font-size:23px;letter-spacing:.05em;font-weight:500;
+    color:#fff;transition:color .4s;
+  }
+  header.scrolled .brand{color:var(--text-dark)}
+  .brand .dot{color:var(--accent)}
+  nav.desk{display:flex;align-items:center;gap:38px}
+  nav.desk a{
+    font-size:12px;text-transform:uppercase;letter-spacing:.14em;
+    color:#fff;font-weight:400;transition:color .4s,opacity .3s;
+  }
+  header.scrolled nav.desk a{color:var(--text-mid)}
+  nav.desk a:hover{opacity:.55}
+  .cta{
+    font-family:var(--font-body);
+    font-size:12px;text-transform:uppercase;letter-spacing:.14em;
+    background:var(--accent);color:#fff;
+    padding:12px 22px;border-radius:2px;font-weight:500;
+    transition:background-color .3s, transform .3s;
+    mix-blend-mode:normal;
+  }
+  .cta:hover{background:#7e2d22}
+  .nav-right{display:flex;align-items:center;gap:28px}
+
+  .burger{
+    display:none;flex-direction:column;gap:5px;
+    background:none;border:none;cursor:pointer;padding:6px;
+  }
+  .burger span{width:26px;height:1.5px;background:#fff;transition:.4s}
+  header.scrolled .burger span{background:var(--text-dark)}
+
+  /* mobile menu */
+  .mobile-menu{
+    position:fixed;inset:0;z-index:850;background:var(--bg);
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 var(--gut);
+    transform:translateY(-100%);transition:transform .6s cubic-bezier(.7,0,.2,1);
+  }
+  .mobile-menu.open{transform:translateY(0)}
+  .mobile-menu a{
+    font-family:var(--font-display);font-size:clamp(36px,9vw,58px);
+    color:var(--text-dark);padding:9px 0;font-weight:400;
+  }
+  .mobile-menu .mclose{
+    position:absolute;top:24px;right:var(--gut);
+    font-size:13px;text-transform:uppercase;letter-spacing:.14em;
+    background:none;border:none;cursor:pointer;color:var(--text-mid);
+  }
+  .mobile-menu .mcontact{margin-top:42px;font-size:14px;color:var(--text-mid);line-height:2}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;height:100vh;min-height:600px;
+    overflow:hidden;display:flex;align-items:flex-end;
+  }
+  .hero-img{position:absolute;inset:0;will-change:transform}
+  .hero-img img{width:100%;height:100%;object-fit:cover}
+  .hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.28) 0%,rgba(20,18,16,.05) 40%,rgba(20,18,16,.42) 100%)}
+  .hero-inner{
+    position:relative;z-index:2;width:100%;
+    padding:0 var(--gut) clamp(54px,9vh,96px);
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+  }
+  .hero-eyebrow{color:rgba(255,255,255,.78);margin-bottom:22px}
+  .hero h1{
+    color:#fff;font-size:clamp(64px,15vw,184px);
+    font-weight:300;line-height:.92;letter-spacing:.01em;
+  }
+  .hero h1 .dot{color:var(--accent)}
+  .hero-sub{
+    color:rgba(255,255,255,.85);font-size:clamp(15px,1.6vw,18px);
+    margin-top:18px;font-weight:300;letter-spacing:.02em;max-width:520px;
+  }
+  .scroll-ind{
+    position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    z-index:3;color:rgba(255,255,255,.7);font-size:10px;
+    text-transform:uppercase;letter-spacing:.2em;text-align:center;
+  }
+  .scroll-ind .line{
+    width:1px;height:42px;background:rgba(255,255,255,.5);
+    margin:10px auto 0;transform-origin:top;animation:scrollline 2.2s ease-in-out infinite;
+  }
+  @keyframes scrollline{0%{transform:scaleY(0)}40%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
+
+  /* reveal helpers */
+  .word{display:inline-block;overflow:hidden;vertical-align:top}
+  .word > span{display:inline-block;will-change:transform}
+  [data-fade]{opacity:0;transform:translateY(24px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.6,.2,1)}
+  [data-fade].in{opacity:1;transform:none}
+
+  /* ---------- section frame ---------- */
+  section{position:relative}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--gut);padding-right:var(--gut)}
+
+  /* ---------- manifest ---------- */
+  .manifest{padding:clamp(110px,17vh,200px) 0}
+  .manifest .wrap{display:flex;flex-direction:column;align-items:center;text-align:center}
+  .manifest .eyebrow{margin-bottom:34px}
+  .manifest p{
+    font-family:var(--font-display);font-weight:300;
+    font-size:clamp(26px,3.4vw,44px);line-height:1.32;
+    max-width:680px;color:var(--text-dark);letter-spacing:.01em;
+  }
+  .manifest p .accent{color:var(--accent);font-style:italic}
+  .manifest .sig{margin-top:42px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+
+  /* ---------- editorial split blocks ---------- */
+  .splits{padding:clamp(20px,4vh,40px) 0 clamp(40px,8vh,90px)}
+  .block{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,6vw,110px);
+    align-items:center;
+    padding:clamp(60px,11vh,130px) 0;
+  }
+  .block.reverse .b-text{order:2}
+  .block.reverse .b-img{order:1}
+  .b-img{position:relative;overflow:hidden}
+  .b-img .reveal-mask{overflow:hidden;will-change:clip-path}
+  .b-img img{width:100%;aspect-ratio:4/5;object-fit:cover;will-change:transform}
+  .b-num{font-family:var(--font-display);font-size:15px;font-style:italic;color:var(--accent);letter-spacing:.04em}
+  .b-text .eyebrow{margin:20px 0 18px}
+  .block.reverse .b-text{padding-right:0}
+  .b-text h2{margin-bottom:24px}
+  .b-text p{color:var(--text-mid);max-width:440px;font-size:16.5px}
+  .b-text .meta{
+    margin-top:30px;font-size:12px;text-transform:uppercase;letter-spacing:.13em;
+    color:var(--stone);border-top:1px solid rgba(156,147,140,.3);padding-top:18px;max-width:440px;
+  }
+
+  /* ---------- wine feature ---------- */
+  .wine{position:relative;background:var(--bg-alt);overflow:hidden}
+  .wine-grid{display:grid;grid-template-columns:1.25fr 1fr;min-height:88vh}
+  .wine-img{overflow:hidden;will-change:clip-path}
+  .wine-img img{width:100%;height:100%;object-fit:cover;min-height:60vh;will-change:transform}
+  .wine-copy{display:flex;flex-direction:column;justify-content:center;padding:clamp(60px,9vw,120px) var(--gut)}
+  .wine-copy .eyebrow{color:var(--accent);margin-bottom:26px}
+  .wine-copy h2{margin-bottom:28px}
+  .wine-copy p{color:var(--text-mid);max-width:420px;margin-bottom:20px}
+  .wine-regions{display:flex;gap:46px;margin-top:18px;flex-wrap:wrap}
+  .wine-regions span{font-family:var(--font-display);font-size:24px;font-style:italic;color:var(--text-dark)}
+  .wine-regions small{display:block;font-family:var(--font-body);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--stone);font-style:normal;margin-top:6px}
+
+  /* ---------- menu ---------- */
+  .menu{padding:clamp(110px,16vh,190px) 0}
+  .menu-head{text-align:center;margin-bottom:clamp(60px,9vh,96px)}
+  .menu-head .eyebrow{margin-bottom:22px}
+  .menu-head p{color:var(--text-mid);max-width:520px;margin:18px auto 0;font-size:16px}
+  .menu-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,110px);max-width:1080px;margin:0 auto}
+  .menu-group + .menu-group{margin-top:54px}
+  .menu-group h3{margin-bottom:8px}
+  .menu-group .gnote{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:26px;display:block}
+  .menu-item{
+    display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    padding:17px 0;border-bottom:1px solid rgba(156,147,140,.28);
+  }
+  .menu-item:last-child{border-bottom:none}
+  .menu-item .mi-name{font-family:var(--font-display);font-size:21px;color:var(--text-dark);letter-spacing:.01em}
+  .menu-item .mi-desc{font-size:13.5px;color:var(--text-mid);max-width:300px;text-align:right}
+  .menu-foot{text-align:center;margin-top:clamp(56px,8vh,84px);font-size:13px;color:var(--stone);letter-spacing:.04em}
+
+  /* ---------- gallery ---------- */
+  .gallery{padding:clamp(40px,7vh,80px) 0 clamp(110px,16vh,180px)}
+  .gallery .ghead{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:46px;flex-wrap:wrap;gap:20px}
+  .gallery .ghead p{color:var(--text-mid);max-width:340px;font-size:15px}
+  .g-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,1.6vw,22px)}
+  .g-grid figure{overflow:hidden;will-change:clip-path}
+  .g-grid img{width:100%;height:100%;object-fit:cover;will-change:transform;transition:transform 1.1s cubic-bezier(.2,.6,.2,1)}
+  .g-grid figure:hover img{transform:scale(1.05)}
+  .g1{grid-column:span 7;aspect-ratio:16/11}
+  .g2{grid-column:span 5;aspect-ratio:4/5}
+  .g3{grid-column:span 5;aspect-ratio:4/5}
+  .g4{grid-column:span 7;aspect-ratio:16/11}
+  .g5{grid-column:span 4;aspect-ratio:1/1}
+  .g6{grid-column:span 4;aspect-ratio:1/1}
+  .g7{grid-column:span 4;aspect-ratio:1/1}
+
+  /* ---------- contact ---------- */
+  .contact{background:var(--text-dark);color:var(--bg);padding:clamp(100px,15vh,170px) 0}
+  .contact .eyebrow{color:var(--stone)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,90px);align-items:start}
+  .contact h2{color:var(--bg);margin:22px 0 30px;font-size:clamp(40px,6vw,76px)}
+  .contact h2 .italic{color:#cbb3a8}
+  .contact .lead{color:rgba(245,244,241,.66);max-width:420px;margin-bottom:40px}
+  .c-row{border-top:1px solid rgba(156,147,140,.3);padding:22px 0;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .c-row .lab{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--stone)}
+  .c-row .val{font-family:var(--font-display);font-size:21px;color:var(--bg)}
+  .c-row .val a{transition:color .3s}
+  .c-row .val a:hover{color:#cbb3a8}
+  .contact .res-cta{
+    display:inline-flex;align-items:center;gap:12px;margin-top:42px;
+    background:var(--accent);color:#fff;padding:18px 34px;border-radius:2px;
+    font-size:13px;text-transform:uppercase;letter-spacing:.16em;font-weight:500;
+    transition:background-color .3s,transform .3s;
+  }
+  .contact .res-cta:hover{background:#b1453592;background:#b14535;transform:translateY(-2px)}
+  .map-wrap{overflow:hidden;border-radius:3px;height:100%;min-height:380px;filter:grayscale(.4) contrast(1.02)}
+  .map-wrap iframe{width:100%;height:100%;min-height:380px;border:0;display:block}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--text-dark);color:var(--stone);padding:40px var(--gut);border-top:1px solid rgba(156,147,140,.2)}
+  .foot-in{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .foot-brand{font-family:var(--font-display);font-size:22px;color:var(--bg);letter-spacing:.05em}
+  .foot-brand .dot{color:var(--accent)}
+  .foot-in p{font-size:12px;letter-spacing:.05em}
+  .foot-links{display:flex;gap:26px}
+  .foot-links a{font-size:11px;text-transform:uppercase;letter-spacing:.14em;transition:color .3s}
+  .foot-links a:hover{color:var(--bg)}
+
+  /* ---------- sticky mobile bar ---------- */
+  .sticky-bar{
+    position:fixed;bottom:0;left:0;width:100%;z-index:700;display:none;
+    background:rgba(44,41,36,.96);backdrop-filter:blur(8px);
+    padding:12px 16px;gap:12px;align-items:center;justify-content:space-between;
+    border-top:1px solid rgba(156,147,140,.25);
+  }
+  .sticky-bar .sb-name{font-family:var(--font-display);font-size:18px;color:var(--bg);letter-spacing:.04em}
+  .sticky-bar .sb-name .dot{color:var(--accent)}
+  .sticky-bar a.sb-btn{
+    background:var(--accent);color:#fff;padding:11px 20px;border-radius:2px;
+    font-size:12px;text-transform:uppercase;letter-spacing:.13em;font-weight:500;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    nav.desk{display:none}
+    .nav-right .cta{display:none}
+    .burger{display:flex}
+    .wine-grid{grid-template-columns:1fr}
+    .wine-img img{min-height:52vh}
+    .contact-grid{grid-template-columns:1fr}
+    .menu-cols{grid-template-columns:1fr;gap:0}
+    .menu-group.second{margin-top:54px}
+  }
+  @media (max-width:760px){
+    body{font-size:16px}
+    .block{grid-template-columns:1fr;gap:30px;padding:64px 0}
+    .block.reverse .b-text{order:2}
+    .block.reverse .b-img{order:1}
+    .b-img img{aspect-ratio:4/3}
+    .b-text p,.b-text .meta{max-width:none}
+    .menu-item .mi-desc{max-width:200px}
+    .g1,.g2,.g3,.g4,.g5,.g6,.g7{grid-column:span 12;aspect-ratio:4/3}
+    .sticky-bar{display:flex}
+    footer{padding-bottom:84px}
+    .cursor{display:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    [data-fade]{opacity:1;transform:none}
+    .cursor{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- preloader -->
+<div class="preloader" aria-hidden="true">
+  <div class="preloader-logo">Gušte<span class="dot">.</span></div>
+</div>
+
+<!-- custom cursor -->
+<div class="cursor" aria-hidden="true"></div>
+
+<!-- header -->
+<header id="header">
+  <a href="#top" class="brand" data-cursor>Konoba Gušte<span class="dot">.</span></a>
+  <div class="nav-right">
+    <nav class="desk">
+      <a href="#manifest">Priča</a>
+      <a href="#zara">Sa žara</a>
+      <a href="#vino">Vinska karta</a>
+      <a href="#menu">Jelovnik</a>
+      <a href="#galerija">Galerija</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a href="tel:+38598336023" class="cta" data-cursor>Rezerviraj</a>
+    <button class="burger" id="burger" aria-label="Otvori izbornik">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mclose" id="mclose">Zatvori ✕</button>
+  <a href="#manifest" class="m-link">Priča</a>
+  <a href="#zara" class="m-link">Sa žara</a>
+  <a href="#vino" class="m-link">Vinska karta</a>
+  <a href="#menu" class="m-link">Jelovnik</a>
+  <a href="#galerija" class="m-link">Galerija</a>
+  <a href="#kontakt" class="m-link">Kontakt</a>
+  <div class="mcontact">
+    Stari grad, Vodice<br>
+    <a href="tel:+38598336023">+385 98 336 023</a><br>
+    <a href="mailto:konoba@email.t-com.hr">konoba@email.t-com.hr</a>
+  </div>
+</div>
+
+<!-- hero -->
+<section class="hero" id="top">
+  <div class="hero-img">
+    <img src="https://loremflickr.com/1920/1280/steak,grill?lock=41" alt="Odrezak na žaru na drveni ugljen" fetchpriority="high" />
+  </div>
+  <div class="hero-inner">
+    <span class="eyebrow hero-eyebrow">Vodice · Stari grad · Od žara na drveni ugljen</span>
+    <h1>Gušte<span class="dot">.</span></h1>
+    <p class="hero-sub">Najstarija konoba u Vodicama. Prvi steak house u Dalmaciji. Meso, vatra i vino — i ništa suvišno.</p>
+  </div>
+  <div class="scroll-ind">Listaj<div class="line"></div></div>
+</section>
+
+<!-- manifest -->
+<section class="manifest" id="manifest">
+  <div class="wrap">
+    <span class="eyebrow">Naša priča</span>
+    <p data-split>Otvorili smo vrata u kamenim kućama starog grada i nikad ih nismo zatvorili. <span class="accent">Najstarija konoba u Vodicama</span> i prvi steak house u Dalmaciji — mjesto gdje se vatra drvenog ugljena, vrhunsko meso i pažljivo birano vino spajaju u jedno: gušt.</p>
+    <span class="sig">— Konoba Gušte, Vodice</span>
+  </div>
+</section>
+
+<!-- editorial splits -->
+<section class="splits" id="zara">
+  <div class="wrap">
+
+    <div class="block">
+      <div class="b-text">
+        <span class="b-num">01</span>
+        <div><span class="eyebrow">Sa žara</span></div>
+        <h2 data-split>Odresci na<br>drveni ugljen</h2>
+        <p>Govedina i pečenice nad živom žeravicom drvenog ugljena. Punjeni odresci, sočna govedina i odresci pečeni do točke koju tražite — bez žurbe, s poštovanjem prema mesu i vatri.</p>
+        <div class="meta">Govedina · Pečenice · Punjeni odresci · Roštilj</div>
+      </div>
+      <div class="b-img">
+        <div class="reveal-mask"><img loading="lazy" src="https://loremflickr.com/1000/1250/charcoal,grill?lock=42" alt="Žar od drvenog ugljena" /></div>
+      </div>
+    </div>
+
+    <div class="block reverse">
+      <div class="b-text">
+        <span class="b-num">02</span>
+        <div><span class="eyebrow">Za stolom</span></div>
+        <h2 data-split>Dalmatinska<br>ploča</h2>
+        <p>Obilna ploča za dijeljenje — odabir mesa s roštilja, prilozi i okusi Dalmacije složeni na jednom pladnju. Jelo koje se jede polako, u društvu, uz čašu domaćeg vina.</p>
+        <div class="meta">Za dvoje i više · Roštilj · Domaći prilozi</div>
+      </div>
+      <div class="b-img">
+        <div class="reveal-mask"><img loading="lazy" src="https://loremflickr.com/1000/1250/restaurant,meat?lock=43" alt="Dalmatinska ploča" /></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="b-text">
+        <span class="b-num">03</span>
+        <div><span class="eyebrow">Za početak</span></div>
+        <h2 data-split>Hladne plate s<br>pršutom i sirom</h2>
+        <p>Vrhunski dalmatinski pršut, zreli sirevi i maslinovo ulje — hladne plate kojima svaki gušt počinje. Jednostavno, lokalno, birano s pažnjom.</p>
+        <div class="meta">Vrhunski pršut · Sirevi · Maslinovo ulje</div>
+      </div>
+      <div class="b-img">
+        <div class="reveal-mask"><img loading="lazy" src="https://loremflickr.com/1000/1250/prosciutto,cheese?lock=44" alt="Hladna plata s pršutom i sirom" /></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- wine feature -->
+<section class="wine" id="vino">
+  <div class="wine-grid">
+    <div class="wine-img"><img loading="lazy" src="https://loremflickr.com/1200/1500/red,wine?lock=45" alt="Crno vino uz odrezak" /></div>
+    <div class="wine-copy">
+      <span class="eyebrow">Vinska karta</span>
+      <h2 data-split>Vino koje<br>prati vatru</h2>
+      <p>Velika vinska karta okuplja najbolje hrvatske etikete i odabrana toskanska vina — od domaćih crnih sorti do struktura koje stoje rame uz rame s odreskom s ugljena.</p>
+      <p>Pitajte za preporuku uz vaše jelo — slaganje vina i mesa je dio gušta.</p>
+      <div class="wine-regions">
+        <span>Hrvatska<small>Domaće etikete</small></span>
+        <span>Toscana<small>Odabrana vina</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- menu -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="menu-head">
+      <span class="eyebrow">Jelovnik</span>
+      <h2 data-split>Iz konobe Gušte</h2>
+      <p>Izbor iz naše ponude. Jelovnik se mijenja s ponudom tržnice i sezone — za cjelovitu kartu i preporuke pitajte naše osoblje.</p>
+    </div>
+
+    <div class="menu-cols">
+      <div class="menu-group first">
+        <h3>Sa žara</h3>
+        <span class="gnote">Na drveni ugljen</span>
+        <div class="menu-item"><span class="mi-name">Goveđi odrezak</span><span class="mi-desc">Zreo, na žeravici drvenog ugljena</span></div>
+        <div class="menu-item"><span class="mi-name">Punjeni odrezak</span><span class="mi-desc">Punjen po domaćem receptu</span></div>
+        <div class="menu-item"><span class="mi-name">Pečenice na žaru</span><span class="mi-desc">Sočne, polako pečene</span></div>
+        <div class="menu-item"><span class="mi-name">Govedina s roštilja</span><span class="mi-desc">Rezana, s prilogom</span></div>
+        <div class="menu-item"><span class="mi-name">Dalmatinska ploča</span><span class="mi-desc">Za dijeljenje, izbor mesa</span></div>
+      </div>
+
+      <div class="menu-group second">
+        <h3>Za početak</h3>
+        <span class="gnote">Hladne plate</span>
+        <div class="menu-item"><span class="mi-name">Plata s pršutom</span><span class="mi-desc">Vrhunski dalmatinski pršut</span></div>
+        <div class="menu-item"><span class="mi-name">Plata sira</span><span class="mi-desc">Zreli domaći sirevi</span></div>
+        <div class="menu-item"><span class="mi-name">Pršut i sir</span><span class="mi-desc">Kombinirana plata, maslinovo ulje</span></div>
+
+        <h3 style="margin-top:54px">Uz jelo</h3>
+        <span class="gnote">Vinska karta</span>
+        <div class="menu-item"><span class="mi-name">Hrvatska crna vina</span><span class="mi-desc">Domaće etikete na čašu i bocu</span></div>
+        <div class="menu-item"><span class="mi-name">Toskanska vina</span><span class="mi-desc">Odabrana struktura uz odrezak</span></div>
+      </div>
+    </div>
+
+    <p class="menu-foot">Jelovnik je informativan. Sva jela pripremamo po narudžbi.</p>
+  </div>
+</section>
+
+<!-- gallery -->
+<section class="gallery" id="galerija">
+  <div class="wrap">
+    <div class="ghead">
+      <div>
+        <span class="eyebrow">Galerija</span>
+        <h2 data-split style="margin-top:14px">Vatra, kamen,<br>društvo</h2>
+      </div>
+      <p>Trenuci iz konobe u starom gradu Vodica — od žeravice do stola.</p>
+    </div>
+    <div class="g-grid">
+      <figure class="g1"><img loading="lazy" src="https://loremflickr.com/1100/780/steak,grill?lock=51" alt="Odrezak na žaru" /></figure>
+      <figure class="g2"><img loading="lazy" src="https://loremflickr.com/700/880/charcoal?lock=52" alt="Drveni ugljen i žeravica" /></figure>
+      <figure class="g3"><img loading="lazy" src="https://loremflickr.com/700/880/red,wine?lock=53" alt="Čaša crnog vina" /></figure>
+      <figure class="g4"><img loading="lazy" src="https://loremflickr.com/1100/780/restaurant,interior?lock=54" alt="Interijer konobe" /></figure>
+      <figure class="g5"><img loading="lazy" src="https://loremflickr.com/620/620/prosciutto,cheese?lock=55" alt="Pršut i sir" /></figure>
+      <figure class="g6"><img loading="lazy" src="https://loremflickr.com/620/620/stone,village?lock=56" alt="Kamene kuće starog grada" /></figure>
+      <figure class="g7"><img loading="lazy" src="https://loremflickr.com/620/620/grill,meat?lock=57" alt="Meso s roštilja" /></figure>
+    </div>
+  </div>
+</section>
+
+<!-- contact -->
+<section class="contact" id="kontakt">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <span class="eyebrow">Rezervacija</span>
+        <h2>Sjednite<br><span class="italic">za naš stol</span></h2>
+        <p class="lead">Nalazimo se u kamenim kućama starog grada u Vodicama. Za stol nazovite — rado ćemo vas dočekati.</p>
+        <div class="c-row">
+          <span class="lab">Lokacija</span>
+          <span class="val">Stari grad, Vodice</span>
+        </div>
+        <div class="c-row">
+          <span class="lab">Telefon</span>
+          <span class="val"><a href="tel:+38598336023" data-cursor>+385 98 336 023</a></span>
+        </div>
+        <div class="c-row">
+          <span class="lab">E-mail</span>
+          <span class="val"><a href="mailto:konoba@email.t-com.hr" data-cursor>konoba@email.t-com.hr</a></span>
+        </div>
+        <a href="tel:+38598336023" class="res-cta" data-cursor>Rezerviraj stol →</a>
+      </div>
+      <div class="map-wrap">
+        <iframe
+          title="Karta — Vodice, stari grad"
+          src="https://www.google.com/maps?q=Vodice%20stari%20grad%2C%20Hrvatska&output=embed"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <div class="foot-in">
+    <span class="foot-brand">Konoba Gušte<span class="dot">.</span></span>
+    <p>Stari grad, Vodice · Hrvatska · +385 98 336 023</p>
+    <div class="foot-links">
+      <a href="#manifest">Priča</a>
+      <a href="#menu">Jelovnik</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<!-- sticky mobile bar -->
+<div class="sticky-bar">
+  <span class="sb-name">Gušte<span class="dot">.</span></span>
+  <a href="tel:+38598336023" class="sb-btn">Rezerviraj</a>
+</div>
+
+<!-- scripts -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* ---------- preloader ---------- */
+  const pre = document.querySelector('.preloader');
+  const logo = document.querySelector('.preloader-logo');
+  function endPre(){
+    if(window.gsap){
+      gsap.to(pre,{opacity:0,duration:.6,ease:'power2.out',onComplete:()=>{pre.style.display='none'}});
+    } else { pre.style.display='none'; }
+  }
+  if(reduce){ pre.style.display='none'; }
+  else if(window.gsap){
+    gsap.timeline()
+      .to(logo,{opacity:1,y:0,duration:.9,ease:'power3.out'})
+      .to(logo,{opacity:1,duration:.5})
+      .add(endPre,'+=0.2');
+  } else {
+    setTimeout(endPre,1400);
+  }
+
+  /* ---------- Lenis + GSAP ---------- */
+  let lenis = null;
+  if(window.Lenis && !reduce){
+    lenis = new Lenis({ duration:1.2, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)), smoothWheel:true });
+    if(window.gsap){
+      gsap.ticker.add(t=>lenis.raf(t*1000));
+      gsap.ticker.lagSmoothing(0);
+      if(window.ScrollTrigger) lenis.on('scroll', ScrollTrigger.update);
+    }
+  }
+
+  if(window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- smooth anchors ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const id=a.getAttribute('href');
+      if(id.length<2) return;
+      const t=document.querySelector(id);
+      if(!t) return;
+      e.preventDefault();
+      closeMenu();
+      if(lenis) lenis.scrollTo(t,{offset:-10,duration:1.1});
+      else t.scrollIntoView({behavior:reduce?'auto':'smooth'});
+    });
+  });
+
+  /* ---------- header: scrolled + hide on scroll down ---------- */
+  const header=document.getElementById('header');
+  let lastY=0;
+  function onScroll(){
+    const y=window.scrollY;
+    header.classList.toggle('scrolled', y>60);
+    if(y>lastY && y>400) header.classList.add('hidden');
+    else header.classList.remove('hidden');
+    lastY=y;
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ---------- mobile menu ---------- */
+  const burger=document.getElementById('burger');
+  const mm=document.getElementById('mobileMenu');
+  const mclose=document.getElementById('mclose');
+  function openMenu(){ mm.classList.add('open'); document.body.classList.add('no-scroll'); if(lenis) lenis.stop(); }
+  function closeMenu(){ mm.classList.remove('open'); document.body.classList.remove('no-scroll'); if(lenis) lenis.start(); }
+  burger.addEventListener('click',openMenu);
+  mclose.addEventListener('click',closeMenu);
+
+  /* ---------- custom cursor ---------- */
+  if(fine && !reduce && window.gsap){
+    const cur=document.querySelector('.cursor');
+    const xT=gsap.quickTo(cur,'x',{duration:.4,ease:'power3'});
+    const yT=gsap.quickTo(cur,'y',{duration:.4,ease:'power3'});
+    window.addEventListener('mousemove',e=>{ xT(e.clientX); yT(e.clientY); });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(el=>{
+      el.addEventListener('mouseenter',()=>cur.classList.add('active'));
+      el.addEventListener('mouseleave',()=>cur.classList.remove('active'));
+    });
+  }
+
+  /* ---------- word-stagger reveal on [data-split] ---------- */
+  function splitWords(el){
+    const text=el.textContent;
+    el.setAttribute('aria-label',text.replace(/\s+/g,' ').trim());
+    // preserve <br> structure
+    const html=el.innerHTML;
+    const parts=html.split(/(<br\s*\/?>)/i);
+    el.innerHTML='';
+    parts.forEach(part=>{
+      if(/<br/i.test(part)){ el.appendChild(document.createElement('br')); return; }
+      part.split(/\s+/).filter(Boolean).forEach(w=>{
+        const outer=document.createElement('span'); outer.className='word';
+        const inner=document.createElement('span'); inner.textContent=w;
+        outer.appendChild(inner); el.appendChild(outer);
+        el.appendChild(document.createTextNode(' '));
+      });
+    });
+    return el.querySelectorAll('.word > span');
+  }
+
+  if(window.gsap && window.ScrollTrigger && !reduce){
+    document.querySelectorAll('[data-split]').forEach(el=>{
+      const words=splitWords(el);
+      gsap.set(words,{yPercent:110});
+      gsap.to(words,{
+        yPercent:0,duration:.9,stagger:.06,ease:'power3.out',
+        scrollTrigger:{trigger:el,start:'top 88%'}
+      });
+    });
+
+    /* fade items */
+    document.querySelectorAll('[data-fade]').forEach(el=>{
+      ScrollTrigger.create({trigger:el,start:'top 90%',onEnter:()=>el.classList.add('in')});
+    });
+
+    /* clip-path image reveals + inner parallax */
+    document.querySelectorAll('.reveal-mask, .wine-img, .g-grid figure').forEach(m=>{
+      const img=m.querySelector('img');
+      gsap.fromTo(m,{clipPath:'inset(100% 0 0 0)'},{
+        clipPath:'inset(0% 0 0 0)',duration:1.2,ease:'power3.inOut',
+        scrollTrigger:{trigger:m,start:'top 85%'}
+      });
+      if(img){
+        gsap.fromTo(img,{scale:1.12},{scale:1,duration:1.4,ease:'power3.out',
+          scrollTrigger:{trigger:m,start:'top 85%'}});
+      }
+    });
+
+    /* hero parallax + breathe */
+    gsap.to('.hero-img',{yPercent:18,ease:'none',
+      scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:1}});
+    gsap.fromTo('.hero-img img',{scale:1.06},{scale:1,duration:2.2,ease:'power2.out'});
+  } else {
+    document.querySelectorAll('[data-fade]').forEach(el=>el.classList.add('in'));
+  }
+})();
+</script>
+</body>
+</html>
